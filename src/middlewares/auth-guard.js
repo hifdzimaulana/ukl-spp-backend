@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const Abilities = require('@utils/ability')
 const { Forbidden, Unauthorized } = require('http-errors')
 const { ErrorHandler } = require('@middlewares/error-handler')
 
@@ -15,7 +16,12 @@ module.exports = function (req, res, next) {
             if (error) {
                 ErrorHandler(Forbidden(), req, res)
             } else {
-                req.user = payload
+                const user = payload
+                const abilities = Abilities(user.id, user.role)
+                req.user = {
+                    ...user,
+                    abilities
+                }
                 next()
             }
         })

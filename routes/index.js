@@ -12,7 +12,6 @@ glob(`${config.folderDir}*${config.ext}`, function (err, files) {
     if (err) {
         throw new Error(err.name)
     } else {
-        console.log(files);
         for (const item of files) {
             var basename = path.basename(item, config.ext)
             var file = require('./' + basename + config.ext)

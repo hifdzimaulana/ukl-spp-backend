@@ -12,7 +12,7 @@ bootstrapLogger()
 /**
  * Module dependencies.
  */
-var app = require('@src/app');
+var app = require('@root/app');
 var debug = require('debug')('server-baru:server');
 var http = require('http');
 

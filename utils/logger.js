@@ -3,7 +3,7 @@ const { configure, getLogger } = require('log4js')
 const path = require('path')
 
 const strDate = new Date().toLocaleDateString('id-ID').replaceAll('/', '-')
-const logFilePath = path.join(__dirname, '../..', 'logs', strDate + '.log')
+const logFilePath = path.join(__dirname, '..', 'logs', strDate + '.log')
 
 function bootstrapLogger() {
     configure({

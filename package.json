@@ -25,11 +25,10 @@
   },
   "_moduleAliases": {
     "@root": ".",
-    "@src": "./src",
-    "@controllers": "./src/controllers",
-    "@models": "./src/models",
-    "@routes": "./src/routes",
-    "@middlewares": "./src/middlewares",
-    "@utils": "./src/utils"
+    "@controllers": "./controllers",
+    "@models": "./models",
+    "@routes": "./routes",
+    "@middlewares": "./middlewares",
+    "@utils": "./utils"
   }
 }

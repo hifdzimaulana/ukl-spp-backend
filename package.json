@@ -29,6 +29,7 @@
     "@models": "./models",
     "@routes": "./routes",
     "@middlewares": "./middlewares",
-    "@utils": "./utils"
+    "@utils": "./utils",
+    "@validations": "./validations"
   }
 }

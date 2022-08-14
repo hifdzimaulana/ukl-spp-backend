@@ -1,14 +1,16 @@
 const Router = require('express').Router()
 const AuthGuard = require('@middlewares/auth-guard')
 const LogRequest = require('@middlewares/log-request')
+
 const { findAll, findById, create, update } = require('@controllers/kelas.controller')
+const { UpdateKelasSchema, CreateKelasSchema } = require('@validations/kelas.schema')
 
 const { LoggerMiddleware } = new LogRequest('KELAS_ROUTE')
 
 Router
     .use(LoggerMiddleware, AuthGuard)
-    .post('/', create)
-    .patch('/:id', update)
+    .post('/', CreateKelasSchema, create)
+    .patch('/:id', UpdateKelasSchema, update)
     .get('/', findAll)
     .get('/:id', findById)
 

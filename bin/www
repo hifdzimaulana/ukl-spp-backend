@@ -5,6 +5,10 @@ require('module-alias/register')
 
 // configure dotenv
 require('dotenv').config()
+
+// configure log4js
+const { bootstrapLogger } = require('@utils/logger')
+bootstrapLogger()
 /**
  * Module dependencies.
  */

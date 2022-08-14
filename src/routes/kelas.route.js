@@ -1,17 +1,12 @@
 const Router = require('express').Router()
 const AuthGuard = require('@middlewares/auth-guard')
+const LogRequest = require('@middlewares/log-request')
 const { findAll, findById } = require('@controllers/kelas.controller')
 
-const { getLogger } = require('@utils/logger')
-
-const logger = getLogger('KELAS_ROUTE')
+const { LoggerMiddleware } = new LogRequest('KELAS_ROUTE')
 
 Router
-    .use(AuthGuard)
-    .use((req, _res, next) => {
-        logger.info(`[${req.method}] ${req.originalUrl} Incoming request ...`)
-        next()
-    })
+    .use(LoggerMiddleware, AuthGuard)
     .get('/', findAll)
     .get('/:id', findById)
 

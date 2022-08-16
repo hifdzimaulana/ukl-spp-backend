@@ -5,8 +5,20 @@ async function findAll(req, res, next) {
     if (req.user.abilities.cannot('read', Pembayaran)) {
         return next(Forbidden())
     }
-    const result = await Pembayaran.findAll()
-    res.json(result)
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 10
+
+    const result = await Pembayaran.findAndCountAll({
+        offset: (page - 1) * limit,
+        limit,
+        order: [
+            ['createdAt', 'ASC']
+        ]
+    })
+
+    const totalPage = Math.ceil(result.count / limit)
+
+    res.json({ currentPage: page, totalPage, rowLimit: limit, ...result })
 }
 
 async function findById(req, res, next) {

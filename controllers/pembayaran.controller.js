@@ -1,5 +1,6 @@
 const { Pembayaran } = require('@models')
 const { NotFound, Forbidden } = require('http-errors')
+const { Op } = require('sequelize')
 
 async function findAll(req, res, next) {
     if (req.user.abilities.cannot('read', Pembayaran)) {
@@ -8,14 +9,35 @@ async function findAll(req, res, next) {
     const page = Number(req.query.page) || 1
     const limit = Number(req.query.limit) || 10
 
-    const result = await Pembayaran.findAndCountAll({
+    const options = {
         offset: (page - 1) * limit,
         limit,
         order: [
             ['createdAt', 'ASC']
-        ]
-    })
+        ],
+        where: {}
+    }
 
+    const { idPetugas, idSpp, idSiswa, from, until } = req.query
+
+    if (idPetugas) options.where.idPetugas = idPetugas
+    if (idSpp) options.where.idSpp = idSpp
+    if (idSiswa) options.where.idSiswa = idSiswa
+
+    if (from || until) {
+        const OpAnd = {}
+        if (from && until) {
+            OpAnd[Op.between] = [new Date(from), new Date(until)]
+        }
+        else {
+            from
+                ? OpAnd[Op.gte] = new Date(from)
+                : OpAnd[Op.lte] = new Date(until)
+        }
+        options.where.tanggalBayar = OpAnd
+    }
+
+    const result = await Pembayaran.findAndCountAll(options)
     const totalPage = Math.ceil(result.count / limit)
 
     res.json({ currentPage: page, totalPage, rowLimit: limit, ...result })

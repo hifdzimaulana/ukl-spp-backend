@@ -18,7 +18,7 @@ async function findAll(req, res, next) {
         where: {}
     }
 
-    const { idPetugas, idSpp, idSiswa, from, until } = req.query
+    const { idPetugas, idSpp, idSiswa, from, until, tanggalBayar } = req.query
 
     if (idPetugas) options.where.idPetugas = idPetugas
     if (idSpp) options.where.idSpp = idSpp
@@ -35,6 +35,13 @@ async function findAll(req, res, next) {
                 : OpAnd[Op.lte] = new Date(until)
         }
         options.where.tanggalBayar = OpAnd
+    } else {
+        if (tanggalBayar) {
+            const dDay = new Date(tanggalBayar)
+            const day2 = new Date(tanggalBayar)
+            day2.setDate(dDay.getDate() + 1)
+            options.where.tanggalBayar = { [Op.between]: [dDay, day2] }
+        }
     }
 
     const result = await Pembayaran.findAndCountAll(options)

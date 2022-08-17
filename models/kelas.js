@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Kelas.init({
     namaKelas: DataTypes.STRING,
-    kompetensiKeahlian: DataTypes.STRING
+    jurusan: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Kelas',

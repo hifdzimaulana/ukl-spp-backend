@@ -3,7 +3,7 @@ const ValidateSchema = require('@middlewares/validate-schema')
 
 const schema = {
     namaKelas: Joi.string(),
-    kompetensiKeahlian: Joi.string().valid('RPL', 'TKJ'),
+    jurusan: Joi.string().valid('RPL', 'TKJ'),
 }
 
 const UpdateSchema = Joi.object(schema)

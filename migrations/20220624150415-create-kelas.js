@@ -11,7 +11,7 @@ module.exports = {
       namaKelas: {
         type: Sequelize.STRING
       },
-      kompetensiKeahlian: {
+      jurusan: {
         type: Sequelize.STRING
       },
       createdAt: {

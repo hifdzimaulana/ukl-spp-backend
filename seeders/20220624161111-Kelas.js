@@ -12,7 +12,7 @@ module.exports = {
     for (const key in nama) {
       kelas.push({
         namaKelas: nama[key],
-        kompetensiKeahlian: keahlian[key],
+        jurusan: keahlian[key],
         createdAt: new Date(),
         updatedAt: new Date(),
       })

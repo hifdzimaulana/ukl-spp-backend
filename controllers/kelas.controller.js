@@ -5,8 +5,28 @@ async function findAll(req, res, next) {
     if (req.user.abilities.cannot('read', Kelas)) {
         return next(Forbidden())
     }
-    const result = await Kelas.findAll()
-    res.json(result)
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 10
+
+    const options = {
+        offset: (page - 1) * limit,
+        limit,
+        order: [
+            ['createdAt', 'ASC']
+        ],
+        where: {}
+    }
+
+    const { jurusan } = req.query
+
+    if (jurusan) {
+        options.where['jurusan'] = jurusan
+    }
+
+    const result = await Kelas.findAndCountAll(options)
+    const totalPage = Math.ceil(result.count / limit)
+
+    res.json({ currentPage: page, totalPage, rowLimit: limit, ...result })
 }
 
 async function findById(req, res, next) {

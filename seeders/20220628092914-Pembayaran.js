@@ -13,7 +13,6 @@ module.exports = {
         idSpp: 1,
         idSiswa: index + 1,
         tanggalBayar: new Date(),
-        jumlahBayar: 50000,
         createdAt: new Date(),
         updatedAt: new Date()
       }

@@ -6,7 +6,6 @@ const schema = {
     idSpp: Joi.number(),
     idSiswa: Joi.number(),
     tanggalBayar: Joi.string().isoDate(),
-    jumlahBayar: Joi.number()
 }
 
 const UpdateSchema = Joi.object(schema)

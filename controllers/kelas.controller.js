@@ -34,7 +34,12 @@ async function findById(req, res, next) {
         return next(Forbidden())
     }
     const { id } = req.params
-    const result = await Kelas.findByPk(id)
+    const { getSiswa } = req.query
+    const options = {
+        include: []
+    }
+    if (getSiswa == 'true') options.include.push('siswa')
+    const result = await Kelas.findByPk(id, options)
     result
         ? res.json(result)
         : next(NotFound())

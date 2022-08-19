@@ -15,14 +15,18 @@ async function findAll(req, res, next) {
         order: [
             ['createdAt', 'ASC']
         ],
-        where: {}
+        where: {},
+        include: []
     }
 
-    const { idPetugas, idSpp, idSiswa, from, until, tanggalBayar } = req.query
+    const { idPetugas, idSpp, idSiswa, from, until, tanggalBayar, getSiswa, getSpp, getPetugas } = req.query
 
     if (idPetugas) options.where.idPetugas = idPetugas
     if (idSpp) options.where.idSpp = idSpp
     if (idSiswa) options.where.idSiswa = idSiswa
+    if (getSiswa == 'true') options.include.push('siswa')
+    if (getSpp == 'true') options.include.push('spp')
+    if (getPetugas == 'true') options.include.push('petugas')
 
     if (from || until) {
         const OpAnd = {}
@@ -55,7 +59,14 @@ async function findById(req, res, next) {
         return next(Forbidden())
     }
     const { id } = req.params
-    const result = await Pembayaran.findByPk(id)
+    const { getSpp, getPetugas, getSiswa } = req.query
+    const option = {
+        include: []
+    }
+    if (getSpp == 'true') option.include.push('spp')
+    if (getPetugas == 'true') option.include.push('petugas')
+    if (getSiswa == 'true') option.include.push('siswa')
+    const result = await Pembayaran.findByPk(id, option)
     result
         ? res.json(result)
         : next(NotFound())

@@ -31,7 +31,7 @@ async function findAll(req, res, next) {
     if (from || until) {
         const OpAnd = {}
         if (from && until) {
-            OpAnd[Op.between] = [new Date(from), new Date(until)]
+            OpAnd[Op.between] = [new Date(from), new Date(until).setDate(new Date(until).getDate() + 1)]
         }
         else {
             from

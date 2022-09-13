@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Siswa, { foreignKey: 'idSiswa', as: 'siswa' })
-      this.belongsTo(models.Petugas, { foreignKey: 'idPetugas', as: 'petugas' })
-      this.belongsTo(models.Spp, { foreignKey: 'idSpp', as: 'spp' })
+      this.belongsTo(models.Siswa, { foreignKey: 'idSiswa', as: 'siswa', onDelete: 'SET NULL' })
+      this.belongsTo(models.Petugas, { foreignKey: 'idPetugas', as: 'petugas', onDelete: 'SET NULL' })
+      this.belongsTo(models.Spp, { foreignKey: 'idSpp', as: 'spp', onDelete: 'RESTRICT' })
     }
   }
   pembayaran.init({

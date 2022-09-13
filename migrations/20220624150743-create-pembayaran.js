@@ -10,7 +10,7 @@ module.exports = {
       },
       idPetugas: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        onDelete: 'SET NULL',
         references: {
           model: 'Petugas',
           key: 'id'
@@ -19,6 +19,7 @@ module.exports = {
       idSpp: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        onDelete: 'RESTRICT',
         references: {
           model: 'Spp',
           key: 'id'
@@ -26,7 +27,7 @@ module.exports = {
       },
       idSiswa: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        onDelete: 'SET NULL',
         references: {
           model: 'Siswa',
           key: 'id'

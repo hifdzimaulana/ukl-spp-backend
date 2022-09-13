@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Siswa, {
         as: 'siswa',
         foreignKey: 'idKelas',
-        onDelete: 'NO ACTION'
       })
     }
   }

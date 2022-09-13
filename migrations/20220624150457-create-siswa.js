@@ -12,7 +12,13 @@ module.exports = {
         type: Sequelize.STRING
       },
       idKelas: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Kelas',
+          key: 'id'
+        }
       },
       alamat: {
         type: Sequelize.TEXT

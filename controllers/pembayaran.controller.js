@@ -55,9 +55,6 @@ async function findAll(req, res, next) {
 }
 
 async function findById(req, res, next) {
-    if (req.user.abilities.cannot('read', Pembayaran)) {
-        return next(Forbidden())
-    }
     const { id } = req.params
     const { getSpp, getPetugas, getSiswa } = req.query
     const option = {
@@ -82,26 +79,27 @@ async function create(req, res, next) {
 }
 
 async function update(req, res, next) {
-    if (req.user.abilities.cannot('update', Pembayaran)) {
+    let pembayaran = await Pembayaran.findByPk(req.params.id)
+    if (!pembayaran) {
+        return next(NotFound())
+    } else if (req.user.abilities.cannot('update', pembayaran)) {
         return next(Forbidden())
     }
-    const { id } = req.params
-    const { body } = req
-    const result = await Pembayaran.update(body, { where: { id } })
-    result[0]
-        ? res.json({ message: 'Succesfully updated' })
-        : next(NotFound())
+
+    const result = await pembayaran.update(req.body)
+    return res.send(result)
 }
 
 async function remove(req, res, next) {
-    if (req.user.abilities.cannot('delete', Pembayaran)) {
+    let pembayaran = await Pembayaran.findByPk(req.params.id)
+    if (!pembayaran) {
+        return next(NotFound())
+    } else if (req.user.abilities.cannot('delete', pembayaran)) {
         return next(Forbidden())
     }
-    const { id } = req.params
-    const result = await Pembayaran.destroy({ where: { id } })
-    result === 1
-        ? res.json({ message: 'Successfully deleted' })
-        : next(NotFound())
+
+    const result = await pembayaran.destroy()
+    return res.send({ message: "Successfully deleted", data: result })
 }
 
 module.exports = { findAll, findById, create, update, remove }

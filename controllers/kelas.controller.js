@@ -55,26 +55,34 @@ async function create(req, res, next) {
 }
 
 async function update(req, res, next) {
-    if (req.user.abilities.cannot('update', Kelas)) {
+    let kelas = await Kelas.findByPk(req.params.id)
+    if (!kelas) {
+        return next(NotFound())
+    } else if (req.user.abilities.cannot('update', kelas)) {
         return next(Forbidden())
     }
-    const { id } = req.params
-    const { body } = req
-    const result = await Kelas.update(body, { where: { id } })
-    result[0]
-        ? res.json({ message: 'Successfully updated' })
-        : next(NotFound())
+
+    const result = await kelas.update(req.body)
+    return res.send({
+        message: "Successfully updated kelas",
+        fields: req.body,
+        result
+    })
 }
 
 async function remove(req, res, next) {
-    if (req.user.abilities.cannot('delete', Kelas)) {
+    let kelas = await Kelas.findByPk(req.params.id)
+    if (!kelas) {
+        return next(NotFound())
+    } else if (req.user.abilities.cannot('delete', kelas)) {
         return next(Forbidden())
     }
-    const { id } = req.params
-    const result = await Kelas.destroy({ where: { id } })
-    result === 1
-        ? res.json({ message: 'Successfully deleted' })
-        : next(NotFound())
+
+    const result = await kelas.destroy()
+    return res.send({
+        message: "Successfully deleted kelas",
+        data: result
+    })
 }
 
 module.exports = {

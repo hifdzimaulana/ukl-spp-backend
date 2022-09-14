@@ -83,7 +83,11 @@ async function update(req, res, next) {
     }
 
     const result = await pembayaran.update(req.body)
-    return res.send(result)
+    return res.send({
+        message: "Successfully updated pembayaran",
+        fields: req.body,
+        result
+    })
 }
 
 async function remove(req, res, next) {
@@ -95,7 +99,10 @@ async function remove(req, res, next) {
     }
 
     const result = await pembayaran.destroy()
-    return res.send({ message: "Successfully deleted", data: result })
+    return res.send({
+        message: "Successfully deleted pembayaran",
+        data: result
+    })
 }
 
 module.exports = { findAll, findById, create, update, remove }

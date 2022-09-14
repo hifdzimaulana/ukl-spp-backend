@@ -8,13 +8,12 @@ const abilities = (id, role) => {
             can('manage', 'all')
             break;
         case 'admin':
+            can('read', 'all')
             can('create', 'Pembayaran')
-            can('read', ['Kelas', 'Pembayaran', 'Siswa', 'Spp'])
             can(['update', 'delete'], 'Pembayaran', { idPetugas: id })
             can('update', 'Petugas', { id })
-            can('read', 'Petugas')
+            can('manage', 'Kelas')
             can('manage', 'Siswa')
-            can('read', 'Spp')
             break;
         case 'owner':
             can('read', 'all')

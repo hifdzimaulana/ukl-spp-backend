@@ -55,6 +55,9 @@ async function findAll(req, res, next) {
 }
 
 async function findById(req, res, next) {
+    if (req.user.abilities.cannot('read', Pembayaran)) {
+        return next(Forbidden())
+    }
     const { id } = req.params
     const { getSpp, getPetugas, getSiswa } = req.query
     const option = {

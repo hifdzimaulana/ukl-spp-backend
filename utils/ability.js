@@ -1,7 +1,7 @@
 const { Ability, AbilityBuilder } = require('@casl/ability')
 
 const abilities = (id, role) => {
-    const { can, build } = new AbilityBuilder(Ability)
+    const { can, cannot, build } = new AbilityBuilder(Ability)
 
     switch (role) {
         case 'superadmin':
@@ -12,6 +12,7 @@ const abilities = (id, role) => {
             can('create', 'Pembayaran')
             can(['update', 'delete'], 'Pembayaran', { idPetugas: id })
             can('update', 'Petugas', { id })
+            cannot('update', 'Petugas', 'level')
             can('manage', 'Kelas')
             can('manage', 'Siswa')
             break;

@@ -19,7 +19,7 @@ async function findAll(req, res, next) {
         include: []
     }
 
-    const { idPetugas, idSpp, idSiswa, from, until, tanggalBayar, getSiswa, getSpp, getPetugas } = req.query
+    const { idPetugas, idSpp, idSiswa, from, until, getSiswa, getSpp, getPetugas } = req.query
 
     if (idPetugas) options.where.idPetugas = idPetugas
     if (idSpp) options.where.idSpp = idSpp
@@ -39,13 +39,6 @@ async function findAll(req, res, next) {
                 : OpAnd[Op.lte] = new Date(until)
         }
         options.where.tanggalBayar = OpAnd
-    } else {
-        if (tanggalBayar) {
-            const dDay = new Date(tanggalBayar)
-            const day2 = new Date(tanggalBayar)
-            day2.setDate(dDay.getDate() + 1)
-            options.where.tanggalBayar = { [Op.between]: [dDay, day2] }
-        }
     }
 
     const result = await Pembayaran.findAndCountAll(options)
@@ -82,26 +75,34 @@ async function create(req, res, next) {
 }
 
 async function update(req, res, next) {
-    if (req.user.abilities.cannot('update', Pembayaran)) {
+    let pembayaran = await Pembayaran.findByPk(req.params.id)
+    if (!pembayaran) {
+        return next(NotFound())
+    } else if (req.user.abilities.cannot('update', pembayaran)) {
         return next(Forbidden())
     }
-    const { id } = req.params
-    const { body } = req
-    const result = await Pembayaran.update(body, { where: { id } })
-    result[0]
-        ? res.json({ message: 'Succesfully updated' })
-        : next(NotFound())
+
+    const result = await pembayaran.update(req.body)
+    return res.send({
+        message: "Successfully updated pembayaran",
+        fields: req.body,
+        result
+    })
 }
 
 async function remove(req, res, next) {
-    if (req.user.abilities.cannot('delete', Pembayaran)) {
+    let pembayaran = await Pembayaran.findByPk(req.params.id)
+    if (!pembayaran) {
+        return next(NotFound())
+    } else if (req.user.abilities.cannot('delete', pembayaran)) {
         return next(Forbidden())
     }
-    const { id } = req.params
-    const result = await Pembayaran.destroy({ where: { id } })
-    result === 1
-        ? res.json({ message: 'Successfully deleted' })
-        : next(NotFound())
+
+    const result = await pembayaran.destroy()
+    return res.send({
+        message: "Successfully deleted pembayaran",
+        data: result
+    })
 }
 
 module.exports = { findAll, findById, create, update, remove }

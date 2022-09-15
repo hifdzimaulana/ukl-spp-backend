@@ -59,26 +59,34 @@ async function create(req, res, next) {
 }
 
 async function update(req, res, next) {
-    if (req.user.abilities.cannot('update', Siswa)) {
+    let siswa = await Siswa.findByPk(req.params.id)
+    if (!siswa) {
+        return next(NotFound())
+    } else if (req.user.abilities.cannot('update', siswa)) {
         return next(Forbidden())
     }
-    const { id } = req.params
-    const { body } = req
-    const result = await Siswa.update(body, { where: { id } })
-    result[0]
-        ? res.json({ message: 'Successfully updated' })
-        : next(NotFound())
+
+    const result = await siswa.update(req.body)
+    return res.send({
+        message: "Successfully updated kelas",
+        fields: req.body,
+        result
+    })
 }
 
 async function remove(req, res, next) {
-    if (req.user.abilities.cannot('delete', Siswa)) {
+    let siswa = await Siswa.findByPk(req.params.id)
+    if (!siswa) {
+        return next(NotFound())
+    } else if (req.user.abilities.cannot('delete', siswa)) {
         return next(Forbidden())
     }
-    const { id } = req.params
-    const result = await Siswa.destroy({ where: { id } })
-    result === 1
-        ? res.json({ message: 'Successfully deleted' })
-        : next(NotFound())
+
+    const result = await siswa.destroy()
+    return res.send({
+        message: "Successfully deleted siswa",
+        data: result
+    })
 }
 
 module.exports = {

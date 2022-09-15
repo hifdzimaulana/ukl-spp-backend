@@ -57,26 +57,35 @@ async function store(req, res, next) {
 }
 
 async function update(req, res, next) {
-    if (req.user.abilities.cannot('update', Petugas)) {
+    const { abilities } = req.user
+    let petugas = await Petugas.findByPk(req.params.id)
+    if (!petugas) {
+        return next(NotFound())
+    } else if (abilities.cannot('update', petugas) || (req.body['level'] && abilities.cannot('update', petugas, 'level'))) {
         return next(Forbidden())
     }
-    const { id } = req.params
-    const { body } = req
-    const result = await Petugas.update(body, { where: { id } })
-    result[0]
-        ? res.send({ message: "Succesfully updated" })
-        : next(NotFound())
+
+    const result = await petugas.update(req.body)
+    return res.send({
+        message: "Successfully updated petugas",
+        fields: req.body,
+        result
+    })
 }
 
 async function remove(req, res, next) {
-    if (req.user.abilities.cannot('delete', Petugas)) {
+    let petugas = await Petugas.findByPk(req.params.id)
+    if (!petugas) {
+        return next(NotFound())
+    } else if (req.user.abilities.cannot('delete', petugas)) {
         return next(Forbidden())
     }
-    const { id } = req.params
-    const result = await Petugas.destroy({ where: { id } })
-    result === 1
-        ? res.send({ message: 'Successfully deleted' })
-        : next(NotFound())
+
+    const result = await petugas.destroy()
+    return res.send({
+        message: "Successfully deleted petugas",
+        data: result
+    })
 }
 
 module.exports = {

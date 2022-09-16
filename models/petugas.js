@@ -28,7 +28,15 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Petugas',
-    freezeTableName: true
+    freezeTableName: true,
+    defaultScope: {
+      attributes: { exclude: ['password'] }
+    },
+    scopes: {
+      withPassword: {
+        attributes: {}
+      }
+    }
   });
   return Petugas;
 };

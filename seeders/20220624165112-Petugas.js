@@ -1,4 +1,6 @@
 'use strict';
+const bcrypt = require('bcrypt')
+const { BCRYPT_SALT } = process.env
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -7,17 +9,25 @@ module.exports = {
     */
     const petugas = [
       {
-        username: 'owner',
-        password: 'password',
-        namaPetugas: 'Muhammad Hifdzi Maulana',
+        username: 'avgjoe',
+        password: bcrypt.hashSync('@2PuluhRibuRupiah', bcrypt.genSaltSync(Number(BCRYPT_SALT))),
+        namaPetugas: 'Average Joe',
         level: 'owner',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        username: 'superadmin',
-        password: 'password',
-        namaPetugas: 'Robertson Abdullah',
+        username: 'janedoe',
+        password: bcrypt.hashSync('Ar&13245', bcrypt.genSaltSync(Number(BCRYPT_SALT))),
+        namaPetugas: 'Jane Doe',
+        level: 'admin',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        username: 'johndoe',
+        password: bcrypt.hashSync('SelamatPagi1!', bcrypt.genSaltSync(Number(BCRYPT_SALT))),
+        namaPetugas: 'John Doe',
         level: 'superadmin',
         createdAt: new Date(),
         updatedAt: new Date(),

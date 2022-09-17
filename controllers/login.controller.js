@@ -5,12 +5,15 @@ const jsonwebtoken = require('jsonwebtoken')
 
 const { JWT_SECRET } = process.env
 
-
 async function login(req, res, next) {
     const petugas = await Petugas.scope('withPassword').findOne({
         where: { username: req.body.username },
         raw: true
     })
+
+    if (!petugas) {
+        return next(Unauthorized("Invalid credentials"))
+    }
 
     const isMatched = await bcrypt.compare(req.body.password, petugas.password)
     if (!isMatched) {

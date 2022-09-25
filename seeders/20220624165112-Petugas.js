@@ -1,6 +1,5 @@
 'use strict';
-const bcrypt = require('bcrypt')
-const { BCRYPT_SALT } = process.env
+const { generateHashedPassword } = require('@utils/credential-generators')
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -10,7 +9,7 @@ module.exports = {
     const petugas = [
       {
         username: 'avgjoe',
-        password: bcrypt.hashSync('@2PuluhRibuRupiah', bcrypt.genSaltSync(Number(BCRYPT_SALT))),
+        password: await generateHashedPassword('@2PuluhRibuRupiah'),
         namaPetugas: 'Average Joe',
         level: 'owner',
         createdAt: new Date(),
@@ -18,7 +17,7 @@ module.exports = {
       },
       {
         username: 'janedoe',
-        password: bcrypt.hashSync('Ar&13245', bcrypt.genSaltSync(Number(BCRYPT_SALT))),
+        password: await generateHashedPassword('Ar&13245'),
         namaPetugas: 'Jane Doe',
         level: 'admin',
         createdAt: new Date(),
@@ -26,7 +25,7 @@ module.exports = {
       },
       {
         username: 'johndoe',
-        password: bcrypt.hashSync('SelamatPagi1!', bcrypt.genSaltSync(Number(BCRYPT_SALT))),
+        password: await generateHashedPassword('SelamatPagi1!'),
         namaPetugas: 'John Doe',
         level: 'superadmin',
         createdAt: new Date(),

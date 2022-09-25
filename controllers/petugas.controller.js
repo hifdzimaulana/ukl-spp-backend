@@ -53,6 +53,7 @@ async function store(req, res, next) {
         return next(Forbidden())
     }
     const { body } = req
+    body.password = await generateHashedPassword(body.password)
     const result = await Petugas.create(body)
     res.send(result)
 }
@@ -84,9 +85,10 @@ async function changePassword(req, res, next) {
     }
 
     const password = await generateHashedPassword(req.body.password)
-
-    const result = await petugas.update({ password })
-    return res.send({ ...result.get({ plain: true }), body: req.body })
+    await petugas.update({ password })
+    return res.send({
+        message: "Successfully changed user's password"
+    })
 }
 
 async function remove(req, res, next) {

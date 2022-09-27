@@ -1,6 +1,6 @@
 const { Petugas } = require('@models')
 const { Unauthorized } = require('http-errors')
-const { generateToken } = require('@utils/token-generator')
+const { generateToken } = require('@utils/credential-generators')
 const bcrypt = require('bcrypt')
 
 async function login(req, res, next) {

@@ -1,6 +1,7 @@
 const { Forbidden, NotFound } = require('http-errors')
 const { Petugas } = require('@models')
 const { Op } = require('sequelize')
+const { generateHashedPassword } = require('@utils/credential-generators')
 
 async function findAll(req, res, next) {
     if (req.user.abilities.cannot('read', Petugas)) {
@@ -52,6 +53,7 @@ async function store(req, res, next) {
         return next(Forbidden())
     }
     const { body } = req
+    body.password = await generateHashedPassword(body.password)
     const result = await Petugas.create(body)
     res.send(result)
 }
@@ -70,6 +72,22 @@ async function update(req, res, next) {
         message: "Successfully updated petugas",
         fields: req.body,
         result
+    })
+}
+
+async function changePassword(req, res, next) {
+    const { abilities } = req.user
+    let petugas = await Petugas.findByPk(req.params.id)
+    if (!petugas) {
+        return next(NotFound())
+    } else if (abilities.cannot('update', petugas)) {
+        return next(Forbidden())
+    }
+
+    const password = await generateHashedPassword(req.body.password)
+    await petugas.update({ password })
+    return res.send({
+        message: "Successfully changed user's password"
     })
 }
 
@@ -93,5 +111,6 @@ module.exports = {
     findById,
     store,
     update,
+    changePassword,
     remove
 }
